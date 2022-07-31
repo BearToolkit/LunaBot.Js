@@ -1,0 +1,44 @@
+{
+  "Aether" :{
+      "Names": ["Adamantoise","Cactuar","Faerie","Gilgamesh","Jenova","Midgardsormr","Sargatanas","Siren"]
+  },
+  "Crystal" :{
+      "Names": ["Balmung","Brynhildr","Coeurl","Diabolos","Goblin","Malboro","Mateus","Zalera"]
+  },
+  "Primal" :{
+      "Names": ["Behemoth","Excalibur","Exodus","Famfrit","Hyperion","Lamia","Leviathan","Ultros"]
+  },
+  "Chaos" :{
+      "Names": ["Cerberus","Louisoix","Moogle","Omega","Phantom","Ragnarok","Sagittarius","Spriggan"]
+  },
+  "Light" :{
+      "Names": ["Alpha","Lich","Odin","Phoenix","Raiden","Shiva","Twintania","Zodiark"]
+  },
+  "Materia" :{
+      "Names": ["Bismarck","Ravana","Sephirot","Sophia","Zurvan"]
+  },
+  "Elemental" :{
+      "Names": ["Aegis","Atomos","Carbuncle","Garuda","Gungnir","Kujata","Tonberry","Typhon"]
+  },
+  "Gaia" :{
+      "Names": ["Alexander","Bahamut","Durandal","Fenrir","Ifrit","Ridill","Tiamat","Ultima"]
+  },
+  "Mana" :{
+      "Names": ["Anima","Asura","Chocobo","Hades","Ixion","Masamune","Pandaemonium","Titan"]
+  },
+  "Meteor" :{
+      "Names": ["Belias","Mandragora","Ramuh","Shinryu","Unicorn","Valefor","Yojimbo","Zeromus"]
+  },
+  "豆豆柴" :{
+      "Names": ["水晶塔","银泪湖","太阳海岸","伊修加德","红茶川"]
+  },
+  "陆行鸟" :{
+      "Names": ["红玉海","神意之地","拉诺西亚","幻影群岛","萌芽池","宇宙和音","沃仙曦染","晨曦王座"]
+  },
+  "莫古力" :{
+      "Names": ["白银乡","白金幻象","神拳痕","潮风亭","旅人栈桥","拂晓之间","龙巢神殿","梦羽宝境"]
+  },
+  "猫小胖" :{
+      "Names": ["紫水栈桥","延夏","静语庄园","摩杜纳","海猫茶屋","柔风海湾","琥珀原"]
+  }
+}
