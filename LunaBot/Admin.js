@@ -173,4 +173,46 @@ export class AdminHandler extends Handler {
       message.delete();
     }, this.config.autoDeleteMessageDuration)
   }
+  
+  showAuditLog(message) {
+    if (!message.content.startsWith("+showAuditLog")) {
+      return;
+    }
+    
+    if (!this.verifyChannel(message.guildId, message.channelId)) {
+      return;
+    }
+
+    if (!this.verifyPermission("Admin", message.member)) {
+      return;
+    }
+
+    this.config = DatabaseManager.getConfig(this.guildId);
+
+    const commands = message.content.split(" ");
+    if (commands.length == 2) {
+      if (commands[1] != "type") {
+        const embed = this.defaultEmbed("Bad Parameters")
+          .setDescription("Usage: '+showAuditLog [type]'");
+        this.sendMessage(message.channel, {embeds: [embed]});
+      }
+    }
+
+    if (commands.length == 1) {
+      message.guild.fetchAuditLogs({
+        limit: 100
+      }).then((auditLogs) => {
+        auditLogs.entries.each((entry) => {
+          if (entry.targetType == "User") {
+            this.sendMessage(message.channel, `${entry.action} Event for "${entry.target}" at <t:${entry.createdTimestamp}:D> <t:${entry.createdTimestamp}:T>`);
+          }
+        })
+      })
+
+    }
+
+    setTimeout(() => {
+      message.delete();
+    }, this.config.autoDeleteMessageDuration)
+  }
 }

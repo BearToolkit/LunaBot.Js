@@ -49,6 +49,7 @@ export class LunaBot {
     this.client.on("messageCreate", (message) => this.adminHandler.setAutoKickState(message));
     this.client.on("messageCreate", (message) => this.adminHandler.setAutoKickThreshold(message));
     this.client.on("messageCreate", (message) => this.adminHandler.setMinimumVerificationLevel(message));
+    this.client.on("messageCreate", (message) => this.adminHandler.showAuditLog(message));
   }
   
   setHuntMapHandler(guildId, channelId) {
