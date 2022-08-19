@@ -1,5 +1,5 @@
 import axios from "axios";
-import cheerio from "cheerio";
+import { load } from "cheerio";
 
 import { EmbedBuilder } from "discord.js";
 import fs from "fs";
@@ -18,7 +18,7 @@ const lodestoneLookup = async (name, world) => {
   const response = await axios.get("https://na.finalfantasyxiv.com/lodestone/character/?q=" + name + "&worldname=" + world);
   if (response.status == 200) {
     const html = response.data;
-    const $ = cheerio.load(html);
+    const $ = load(html);
 
     $("a.entry__link").each((index, element) => {
       const playerName = $("p.entry__name", element).text();
@@ -35,7 +35,7 @@ const lodestoneVerification = async (id, verification) => {
   const response = await axios.get("https://na.finalfantasyxiv.com/lodestone/character/" + id);
   if (response.status == 200) {
     const html = response.data;
-    const $ = cheerio.load(html);
+    const $ = load(html);
 
     var levelRequirement = 0;
     $("div.character__level__list > ul > li").each((index, element) => {
@@ -404,7 +404,7 @@ export class CommandHandler extends Handler {
     this.sendMessage(message.channel, {embeds: [embed]}, true);
   }
 
-  /* This is not being used */
+  /* This is not being used 
   async addEarlyPullerComplaint(message) {
     if (!message.content.startsWith("+ep")) {
       return;
@@ -441,4 +441,5 @@ export class CommandHandler extends Handler {
       message.delete();
     }, this.config.autoDeleteMessageDuration)
   }
+  */
 }

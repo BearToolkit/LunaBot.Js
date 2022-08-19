@@ -10,7 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 var DataCenters = JSON.parse(fs.readFileSync(__dirname + '/../resources/data-centers.json', 'utf8'));
 var RolesId = JSON.parse(fs.readFileSync(__dirname + '/../resources/roles.json', 'utf8'));
 
-const Debug = true;
+const Debug = false;
 
 export class Handler {
   constructor(guildId, channelId) {
@@ -49,10 +49,11 @@ export class Handler {
       if (authorRoles.includes(RolesId.AdminRoles["Rep"])) {
         return true;
       }
-    } else {
-      return true;
+    } else if (command == "Special") {
+      if (authorRoles.includes(RolesId.AdminRoles["Mod"]) || authorRoles.includes(RolesId.AdminRoles["Rep"])) {
+        return true;
+      }
     }
-
     return false;
   }
 

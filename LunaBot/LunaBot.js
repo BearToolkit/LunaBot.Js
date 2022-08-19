@@ -16,7 +16,7 @@ export class LunaBot {
       
       for (var [id, guild] of this.client.guilds.cache) {
         if (guild.id == this.taskHandler.guildId) {
-          //this.taskHandler.setupMemberHandlingTask(guild);
+          this.taskHandler.setupMemberHandlingTask(guild);
         }
       }
 
