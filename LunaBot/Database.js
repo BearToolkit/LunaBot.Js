@@ -81,11 +81,28 @@ export const DatabaseManager = (function () {
   }
 
   const writeComplaintLog = (guildId, author, member, reason) => {
-    return ComplaintLog.create({
-      guild_id: guildId,
-      author: author.id,
-      member: member.id,
-      reason: reason
+    if (!member) {
+      return ComplaintLog.create({
+        guild_id: guildId,
+        author: author.id,
+        reason: reason
+      });
+    } else {
+      return ComplaintLog.create({
+        guild_id: guildId,
+        author: author.id,
+        member: member.id,
+        reason: reason
+      });
+    }
+  }
+
+  const getEarlyPullerLogs = () => {
+    return ComplaintLog.findAll({
+      where: {
+        reason: "Early Puller"
+      },
+      order: [["created_date", "DESC"]]
     });
   }
 
@@ -94,6 +111,7 @@ export const DatabaseManager = (function () {
     getConfig: getConfig,
     setConfig: setConfig,
     writeComplaintLog: writeComplaintLog,
+    getEarlyPullerLogs: getEarlyPullerLogs,
   }
 
 })();

@@ -333,6 +333,78 @@ export class CommandHandler extends Handler {
     }, this.config.autoDeleteMessageDuration)
   }
   
+  async updateEarlyPullerTimer(message) {
+    if (!message.content.startsWith("+ep")) {
+      return;
+    }
+  
+    if (!this.verifyChannel(message.guildId, message.channelId)) {
+      return;
+    }
+
+    if (!this.verifyPermission("Special", message.member)) {
+      return;
+    }
+    
+    this.config = DatabaseManager.getConfig(this.guildId);
+
+    await DatabaseManager.writeComplaintLog(message.guild.id, message.member, null, "Early Puller");
+    const earlyPullers = await DatabaseManager.getEarlyPullerLogs();
+
+    var sinceLastEP = 0;
+    var longestDuration = 0;
+    if (earlyPullers.length > 1) {
+      sinceLastEP = new Date(earlyPullers[0].created_date).getTime() - new Date(earlyPullers[1].created_date).getTime();
+      longestDuration = sinceLastEP;
+      for (var i = 1; i < earlyPullers.length; i++) {
+        const currentDuration = new Date(earlyPullers[i-1].created_date).getTime() - new Date(earlyPullers[i].created_date).getTime();
+        if (currentDuration > longestDuration) {
+          longestDuration = currentDuration;
+        }
+      }
+    }
+
+    const getDay = (timestamp) => {
+      const dayIndex = Math.floor(timestamp / (24*3600000));
+      if (dayIndex > 1) {
+        return `${dayIndex} days`;
+      } 
+      return `${dayIndex} day`;
+    }
+    const getHour = (timestamp) => {
+      const hourIndex = Math.floor((timestamp % (24*3600000)) / 3600000);
+      if (hourIndex > 1) {
+        return `${hourIndex} hours`;
+      } 
+      return `${hourIndex} hour`;
+    }
+    const getMinutes = (timestamp) => {
+      const minutesIndex = Math.floor((timestamp % (3600000)) / 60000);
+      if (minutesIndex > 1) {
+        return `${minutesIndex} minutes`;
+      } 
+      return `${minutesIndex} minute`;
+    }
+    const getSeconds = (timestamp) => {
+      const secondsIndex = Math.floor((timestamp % (60000)) / 1000);
+      if (secondsIndex > 1) {
+        return `${secondsIndex} seconds`;
+      } 
+      return `${secondsIndex} second`;
+    }
+
+    const embed = this.defaultEmbed("Early pull complaint detected!")
+      .setDescription(`
+        Please remember that Aether Hunts cannot control whether people pull marks early. Sometimes, this happens by accident. Other times, this is done by people beyond the mod team's jurisdiction. Regardless, please be advised that there will be additional S Rank marks in the future.`)
+      .addFields(
+        {name: "Current: ", value: `We have gone ${getDay(sinceLastEP)} ${getHour(sinceLastEP)} ${getMinutes(sinceLastEP)} ${getSeconds(sinceLastEP)} since the last logged complaint.`, inline: false},
+        {name: "Record: ", value: `Our record between logged complaints is ${getDay(longestDuration)} ${getHour(longestDuration)} ${getMinutes(longestDuration)} ${getSeconds(longestDuration)}.`, inline: false},
+      );
+
+    this.sendMessage(message.channel, {embeds: [embed]}, true);
+  }
+
+  /* This is not being used */
   async addEarlyPullerComplaint(message) {
     if (!message.content.startsWith("+ep")) {
       return;

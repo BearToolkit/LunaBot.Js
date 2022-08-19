@@ -94,6 +94,10 @@ export const ComplaintLogHandler = (sequelize) => {
       type: DataTypes.STRING,
       defaultValue: "",
     },
+    player_name: {
+      type: DataTypes.STRING,
+      defaultValue: "",
+    },
     reason: {
       type: DataTypes.STRING,
       defaultValue: "",

@@ -16,7 +16,7 @@ export class LunaBot {
       
       for (var [id, guild] of this.client.guilds.cache) {
         if (guild.id == this.taskHandler.guildId) {
-          this.taskHandler.setupMemberHandlingTask(guild);
+          //this.taskHandler.setupMemberHandlingTask(guild);
         }
       }
 
@@ -39,7 +39,7 @@ export class LunaBot {
     this.client.on("messageCreate", (message) => this.commandHandler.toggleConductorRoleCommand(message));
     this.client.on("messageCreate", (message) => this.commandHandler.toggleSpawnerRoleCommand(message));
     this.client.on("messageCreate", (message) => this.commandHandler.linkCharacterCommand(message));
-    this.client.on("messageCreate", (message) => this.commandHandler.addEarlyPullerComplaint(message));
+    this.client.on("messageCreate", (message) => this.commandHandler.updateEarlyPullerTimer(message));
   }
 
   setupAdminCommandsHandler(guildId, channelId) {
