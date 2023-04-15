@@ -60,7 +60,7 @@ export class TaskHandler extends Handler {
                 let roleInfo = "";
                 roles.map((role) => roleInfo+=`<@&${role}>\n`);
                 const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
-                  .setDescription("Member is from " + key + " Data Center joining AetherHunt Discord.")
+                  .setDescription("Member is from Another Data Center joining AetherHunt Discord.")
                   .addFields(
                     {name: "Current Role", value: roleInfo, inline: true}
                   );
