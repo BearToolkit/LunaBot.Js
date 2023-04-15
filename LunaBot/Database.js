@@ -18,7 +18,7 @@ const ComplaintLog = ComplaintLogHandler(sequelize);
 const defaultConfig = {
   autoKick: true,
   autoKickThreshold: 7*24*3600*1000,
-  autoDeleteMessageDuration: 5*1000,
+  autoDeleteMessageDuration: 15*1000,
   levelGated: 50
 };
 
