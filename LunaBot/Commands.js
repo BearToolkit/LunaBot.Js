@@ -120,8 +120,9 @@ export class CommandHandler extends Handler {
       const playerId = parseInt(commands[1]);
       
       lodestoneVerification(playerId).then((result) => {
-        if (["Aether", "Crystal", "Primal"].includes(result.dc)) {
-          if (result.level > 60) {
+        if (true) {
+        //if (["Aether", "Crystal", "Primal"].includes(result.dc)) {
+          if (result.level >= this.config.levelGated) {
             const embed = this.defaultEmbed("User Verification Success")
               .setThumbnail(result.profile)
               .addFields(
@@ -129,10 +130,19 @@ export class CommandHandler extends Handler {
                 {name: "First Step", value: "You can get more role options at <#865129809452728351>", inline: true},
                 {name: "Added Role", value: `<@&${RolesId.SpecialRoles["LicensedHunter"]}>\n<@&${RolesId.StandardRoles[result.world]}>\n<@&${RolesId.StandardRoles[result.dc]}>`, inline: true}
               );
-            this.verifyUser(message.member, {
-              nick: result.name + ` [${result.world}]`,
-              roles: [RolesId.StandardRoles[result.world], RolesId.StandardRoles[result.dc], RolesId.SpecialRoles["LicensedHunter"]]
-            });
+            
+            if (result.dc == "Aether") {
+              this.verifyUser(message.member, {
+                nick: result.name,
+                roles: [RolesId.StandardRoles[result.world], RolesId.StandardRoles[result.dc], RolesId.SpecialRoles["LicensedHunter"]]
+              });
+            } else {
+              let worldname = ` [${result.dc.slice(0,1).toUpperCase()}-${result.world.slice(0,4).toUpperCase()}]`;
+              this.verifyUser(message.member, {
+                nick: result.name + worldname,
+                roles: [RolesId.StandardRoles[result.dc], RolesId.SpecialRoles["LicensedHunter"]]
+              });
+            }
             this.sendMessage(message.channel, {embeds: [embed]});
           } else {
             const embed = this.defaultEmbed("User Verification Failed")

@@ -19,7 +19,7 @@ const defaultConfig = {
   autoKick: true,
   autoKickThreshold: 7*24*3600*1000,
   autoDeleteMessageDuration: 5*1000,
-  levelGated: 60
+  levelGated: 50
 };
 
 export const DatabaseManager = (function () {

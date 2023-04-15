@@ -33,7 +33,7 @@ export class TaskHandler extends Handler {
                 .setDescription("You have not verified your account within " + kickDays.toFixed(0) + "-day of joining AetherHunt Discord, per Discord rules you were removed from the Guild.");
               this.sendMessage(channel, {embeds: [embed]}, true);
 
-              member.kick("No verification after 7 days");
+              member.kick("No verification after " + kickDays.toFixed(0) + " days");
             });
             
             this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
