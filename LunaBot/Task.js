@@ -58,7 +58,7 @@ export class TaskHandler extends Handler {
             if (OtherDCRoles.includes(role)) {
               this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
                 let roleInfo = "";
-                roles.map((role) => roleInfo+=`<@&${role}>\n`);
+                roles.map((role) => roleInfo = roleInfo + `<@&${role}>\n`);
                 const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
                   .setDescription("Member is from Another Data Center joining AetherHunt Discord.")
                   .addFields(
