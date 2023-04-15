@@ -11,6 +11,8 @@ import { CronJob } from "cron";
 import { Handler } from './Handler.js';
 import { DatabaseManager } from './Database.js';
 
+let DCKickList = {};
+
 export class TaskHandler extends Handler {
   constructor(guildId) {
     super(guildId);
@@ -53,18 +55,21 @@ export class TaskHandler extends Handler {
               console.log(`${member.displayName} have not verified account for ${kickDays.toFixed(2)} days`);
             }
           }
-        } else {
+        } else if (roles.length < 10) {
           for (let role of roles) {
             if (OtherDCRoles.includes(role)) {
               this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
                 let roleInfo = "";
-                roles.map((role) => roleInfo = roleInfo + `<@&${role}>\n`);
+                roles.map((role) => {
+                  roleInfo = roleInfo + `<@&${role}>\n`
+                });
+                
                 const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
-                  .setDescription("Member is from Another Data Center joining AetherHunt Discord.")
                   .addFields(
+                    {name: "Reason", value: "Member is from Another Data Center joining AetherHunt Discord.", inline: true},
                     {name: "Current Role", value: roleInfo, inline: true}
                   );
-                this.sendMessage(debugChannel, {embeds: [embed]}, true);
+                //this.sendMessage(debugChannel, {embeds: [embed]}, true);
               })
               break
             }

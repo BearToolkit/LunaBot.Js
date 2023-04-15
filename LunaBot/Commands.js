@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 var RolesId = JSON.parse(fs.readFileSync(__dirname + '/../resources/roles.json', 'utf8'));
+var huntDiscord = JSON.parse(fs.readFileSync(__dirname + '/../resources/huntDiscord.json', 'utf8'));
 
 import { DatabaseManager } from './Database.js';
 import { Handler } from "./Handler.js";
@@ -142,6 +143,16 @@ export class CommandHandler extends Handler {
                 nick: result.name + worldname,
                 roles: [RolesId.StandardRoles[result.dc], RolesId.SpecialRoles["LicensedHunter"]]
               });
+              
+              message.member.createDM().then((channel) => {
+                const embed = this.defaultEmbed("Welcome to the AetherHunt Discord")
+                  .addFields(
+                    {name: result.name + " @ " + ` ${result.world} [${result.dc}] `, value: "Welcome to AetherHunts Discord", inline: false},
+                    {name: "Notice", value: "This is mainly used for Aether-DC Hunt-related Information. You can still pick-up roles for Aether trains/hunts if you want to stay for Cross-DC Hunts. For " + result.dc + " related hunt activities, you can visit the following link", inline: false},
+                    {name: result.dc + " Hunt Discord", value:  huntDiscord[result.dc] , inline: false}
+                  );
+                this.sendMessage(channel, {embeds: [embed]}, true);
+              });
             }
             this.sendMessage(message.channel, {embeds: [embed]});
           } else {
@@ -186,6 +197,16 @@ export class CommandHandler extends Handler {
                 this.verifyUser(message.member, {
                   nick: result.name + worldname,
                   roles: [RolesId.StandardRoles[result.dc], RolesId.SpecialRoles["LicensedHunter"]]
+                });
+                
+                message.member.createDM().then((channel) => {
+                  const embed = this.defaultEmbed("Welcome to the AetherHunt Discord")
+                    .addFields(
+                      {name: result.name + " @ " + ` ${result.world} [${result.dc}] `, value: "Welcome to AetherHunts Discord", inline: false},
+                      {name: "Notice", value: "This is mainly used for Aether-DC Hunt-related Information. You can still pick-up roles for Aether trains/hunts if you want to stay for Cross-DC Hunts. For " + result.dc + " related hunt activities, you can visit the following link", inline: false},
+                      {name: result.dc + " Hunt Discord", value:  huntDiscord[result.dc] , inline: false}
+                    );
+                  this.sendMessage(channel, {embeds: [embed]}, true);
                 });
               }
               this.sendMessage(message.channel, {embeds: [embed]});
