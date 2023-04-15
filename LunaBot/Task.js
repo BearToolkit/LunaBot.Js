@@ -56,16 +56,16 @@ export class TaskHandler extends Handler {
         } else {
           for (let role of roles) {
             if (OtherDCRoles.includes(role)) {
-              for (let key of Object.keys(RolesId["StandardRoles"])) {
-                if (RolesId["StandardRoles"][key] == role) {
-                  this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
-                    const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
-                      .setDescription("Member is from " + key + " Data Center joining AetherHunt Discord.");
-                    this.sendMessage(debugChannel, {embeds: [embed]}, true);
-                  });
-                  break
-                } 
-              }
+              this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
+                let roleInfo = "";
+                roles.map((role) => roleInfo+=`<@&${role}>\n`);
+                const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
+                  .setDescription("Member is from " + key + " Data Center joining AetherHunt Discord.")
+                  .addFields(
+                    {name: "Current Role", value: roleInfo, inline: true}
+                  );
+                this.sendMessage(debugChannel, {embeds: [embed]}, true);
+              })
               break
             }
           }
