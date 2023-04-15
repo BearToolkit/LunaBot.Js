@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 var RolesId = JSON.parse(fs.readFileSync(__dirname + '/../resources/roles.json', 'utf8'));
+let OtherDCRoles = [RolesId["StandardRoles"]["Chaos"],RolesId["StandardRoles"]["Light"],RolesId["StandardRoles"]["Materia"],RolesId["StandardRoles"]["Elemental"],RolesId["StandardRoles"]["Gaia"],RolesId["StandardRoles"]["Mana"],RolesId["StandardRoles"]["Meteor"]];
 
 import { CronJob } from "cron";
 
@@ -54,12 +55,17 @@ export class TaskHandler extends Handler {
           }
         } else {
           for (let role of roles) {
-            if ([RolesId["StandardRoles"]["Chaos"],RolesId["StandardRoles"]["Light"],RolesId["StandardRoles"]["Materia"],RolesId["StandardRoles"]["Elemental"],RolesId["StandardRoles"]["Gaia"],RolesId["StandardRoles"]["Mana"],RolesId["StandardRoles"]["Meteor"]].includes(role)) {
-              this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
-                const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
-                  .setDescription("Member is from  another Data Center joining AetherHunt Discord.");
-                this.sendMessage(debugChannel, {embeds: [embed]}, true);
-              });
+            if (OtherDCRoles.includes(role)) {
+              for (let key of Object.keys(RolesId["StandardRoles"])) {
+                if (RolesId["StandardRoles"][key] == role) {
+                  this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
+                    const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
+                      .setDescription("Member is from " + key + " Data Center joining AetherHunt Discord.");
+                    this.sendMessage(debugChannel, {embeds: [embed]}, true);
+                  });
+                  break
+                } 
+              }
               break
             }
           }
