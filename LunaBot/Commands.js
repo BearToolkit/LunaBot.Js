@@ -70,10 +70,10 @@ export class CommandHandler extends Handler {
 
   async verifyUser(author, attributes) {
     try {
-      //const existingRoles = Object.keys(RolesId.StandardRoles).map((key) => RolesId.StandardRoles[key]);
+      const existingRoles = Object.keys(RolesId.StandardRoles).map((key) => RolesId.StandardRoles[key]);
       await author.setNickname(attributes.nick, "Verification Success");
-      //await author.roles.remove(existingRoles, "Verification Reset");
-      //await author.roles.add(attributes.roles, "Verification Success");
+      await author.roles.remove(existingRoles, "Verification Reset");
+      await author.roles.add(attributes.roles, "Verification Success");
       return true;
     } catch (error) {
       console.log(error)
