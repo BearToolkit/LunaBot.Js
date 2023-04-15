@@ -3,6 +3,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+var RolesId = JSON.parse(fs.readFileSync(__dirname + '/../resources/roles.json', 'utf8'));
+
 import { CronJob } from "cron";
 
 import { Handler } from './Handler.js';
@@ -48,6 +50,17 @@ export class TaskHandler extends Handler {
             const kickDays = timeSinceJoin / 24 / 3600000;
             if (kickDays > 6.5) {
               console.log(`${member.displayName} have not verified account for ${kickDays.toFixed(2)} days`);
+            }
+          }
+        } else {
+          for (let role of roles) {
+            if ([RolesId["StandardRoles"]["Chaos"],RolesId["StandardRoles"]["Light"],RolesId["StandardRoles"]["Materia"],RolesId["StandardRoles"]["Elemental"],RolesId["StandardRoles"]["Gaia"],RolesId["StandardRoles"]["Mana"],RolesId["StandardRoles"]["Meteor"]].includes(role)) {
+              this.guild.channels.fetch("995751812437119036").then((debugChannel) => {
+                const embed = this.defaultEmbed(member.displayName + " (Will Be Eventually) Automatic Removed from AetherHunt Discord")
+                  .setDescription("Member is from  another Data Center joining AetherHunt Discord.");
+                this.sendMessage(debugChannel, {embeds: [embed]}, true);
+              });
+              break
             }
           }
         }
