@@ -40,6 +40,7 @@ export class LunaBot {
     this.client.on("messageCreate", (message) => this.commandHandler.toggleSpawnerRoleCommand(message));
     this.client.on("messageCreate", (message) => this.commandHandler.linkCharacterCommand(message));
     this.client.on("messageCreate", (message) => this.commandHandler.updateEarlyPullerTimer(message));
+    this.client.on("messageCreate", (message) => this.commandHandler.setPlayerRoles(message));
   }
 
   setupAdminCommandsHandler(guildId, channelId) {

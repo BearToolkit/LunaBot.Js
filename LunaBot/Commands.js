@@ -244,6 +244,156 @@ export class CommandHandler extends Handler {
     }, this.config.autoDeleteMessageDuration)
   }
 
+  async setPlayerRoles(message) {
+    if (!message.content.startsWith("+viewroles") && !message.content.startsWith("+addroles") && !message.content.startsWith("+removeroles")) {
+      return;
+    }
+  
+    if (!this.verifyChannel(message.guildId, message.channelId)) {
+      return;
+    }
+
+    const commands = message.content.split(" ");
+    if (commands.length < 2) {
+      const embed = this.defaultEmbed("Bad Parameters")
+        .setDescription("Usage: " + commands[0] + " [@player]");
+      this.sendMessage(message.channel, {embeds: [embed]});
+    }
+
+    this.config = DatabaseManager.getConfig(this.guildId);
+
+    this.extractPingedUser(message.guild, commands[1]).then((member) => {
+      if (!this.verifyPermission("Admin", message.member) && member != message.member) {
+        console.log(member)
+        console.log(message.member)
+        return;
+      }
+
+      if (commands[0] == "+viewroles") {
+        if (commands.length > 2) {
+          const embed = this.defaultEmbed("Bad Parameters")
+            .setDescription("Usage: " + commands[0] + " [@player]");
+          this.sendMessage(message.channel, {embeds: [embed]});
+          return;
+        }
+
+        let roleString = "";
+        const roles = member.roles.cache.map((role) => roleString += `<@&${role.id}>\n`);
+        
+        const embed = this.defaultEmbed("Displaying Existing Roles")
+          .addFields(
+            {name: member.displayName, value: "Below are your currently used roles", inline: false},
+            {name: "Roles", value: roleString, inline: false}
+          );
+        this.sendMessage(message.channel, {embeds: [embed]});
+        return;
+      } else if (commands[0] == "+removeroles") {
+        if (commands.length < 3) {
+          const embed = this.defaultEmbed("Bad Parameters")
+            .setDescription("Usage: " + commands[0] + " [@player] all-roles/[roles1,roles2...]");
+          this.sendMessage(message.channel, {embeds: [embed]});
+          return;
+        }
+
+        const rolesSelected = commands.slice(2).join(" ");
+        if (rolesSelected == "all-roles") {
+          let standardRoles = [...Object.keys(RolesId.StandardRoles).map((key) => RolesId.StandardRoles[key]), ...Object.keys(RolesId.SpecialRoles).map((key) => RolesId.SpecialRoles[key]), "542602456132091904"]
+          const roles = member.roles.cache.map((role) => role.id).filter((roleId) => !standardRoles.includes(roleId));
+          
+          let roleString = "";
+          roles.map((role) => roleString += `<@&${role}>\n`);
+
+          member.roles.remove(roles, "Command-based Role Removal").then(() => {
+            const embed = this.defaultEmbed("Success Removing these Roles")
+              .addFields(
+                {name: member.displayName, value: "Below are the roles being removed", inline: false},
+                {name: "Roles", value: roleString, inline: false}
+              );
+            this.sendMessage(message.channel, {embeds: [embed]});
+          });
+          return
+
+        } else {
+          let standardRoles = [...Object.keys(RolesId.StandardRoles).map((key) => RolesId.StandardRoles[key]), ...Object.keys(RolesId.SpecialRoles).map((key) => RolesId.SpecialRoles[key]), "542602456132091904"]
+          
+          try {
+            const roleNameList = rolesSelected.replace("[","").replace("]","").split(",").map((roleName) => roleName.trim());
+            const roles = member.roles.cache.filter((role) => roleNameList.includes(role.name) && !standardRoles.includes(role.id))
+          
+            let roleString = "";
+            roles.map((role) => roleString += `<@&${role.id}>\n`);
+
+            member.roles.remove(roles.map((role) => role.id), "Command-based Role Removal").then(() => {
+              const embed = this.defaultEmbed("Success Removing these Roles")
+                .addFields(
+                  {name: member.displayName, value: "Below are the roles being removed", inline: false},
+                  {name: "Roles", value: roleString, inline: false}
+                );
+              this.sendMessage(message.channel, {embeds: [embed]});
+            });
+            return;
+            
+          } catch (error) {
+            console.log(error);
+            const embed = this.defaultEmbed("Bad Parameters")
+              .setDescription("Usage: " + commands[0] + " [@player] all-roles/[roles1,roles2...]");
+            this.sendMessage(message.channel, {embeds: [embed]});
+          }
+        }
+      } else if (commands[0] == "+addroles") {
+        if (!this.verifyPermission("Admin", message.member)) {
+          return;
+        }
+
+        if (commands.length < 3) {
+          const embed = this.defaultEmbed("Bad Parameters")
+            .setDescription("Usage: " + commands[0] + " [@player] [roles1,roles2...]");
+          this.sendMessage(message.channel, {embeds: [embed]});
+          return;
+        }
+
+        const rolesSelected = commands.slice(2).join(" ");
+        let standardRoles = [...Object.keys(RolesId.StandardRoles).map((key) => RolesId.StandardRoles[key]), ...Object.keys(RolesId.SpecialRoles).map((key) => RolesId.SpecialRoles[key]), "542602456132091904"]
+        
+        try {
+          const roleNameList = rolesSelected.replace("[","").replace("]","").split(",").map((roleName) => roleName.trim());
+          const roles = message.guild.roles.cache.filter((role) => roleNameList.includes(role.name))
+        
+          let roleString = "";
+          roles.map((role) => roleString += `<@&${role.id}>\n`);
+
+          member.roles.add(roles.map((role) => role.id), "Command-based Role Addition").then(() => {
+            const embed = this.defaultEmbed("Success Adding these Roles")
+              .addFields(
+                {name: member.displayName, value: "Below are the roles being added", inline: false},
+                {name: "Roles", value: roleString, inline: false}
+              );
+            this.sendMessage(message.channel, {embeds: [embed]});
+          });
+          return;
+          
+        } catch (error) {
+          console.log(error);
+          const embed = this.defaultEmbed("Bad Parameters")
+            .setDescription("Usage: " + commands[0] + " [@player] [roles1,roles2...]");
+          this.sendMessage(message.channel, {embeds: [embed]});
+        }
+      } else {
+        const embed = this.defaultEmbed("Bad Parameters")
+          .setDescription("Usage: " + commands[0] + " Not Implemented");
+        this.sendMessage(message.channel, {embeds: [embed]});
+      }
+    }).catch((error) => {
+      const embed = this.defaultEmbed("Bad Parameters")
+        .setDescription("Usage: " + commands[0] + " [@player]");
+      this.sendMessage(message.channel, {embeds: [embed]});
+    });
+    
+    setTimeout(() => {
+      message.delete();
+    }, this.config.autoDeleteMessageDuration)
+  }
+
   async toggleConductorRoleCommand(message) {
     if (!message.content.startsWith("+conductor")) {
       return;
